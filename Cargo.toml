@@ -15,3 +15,4 @@ relayer-utils = { git = "https://github.com/zkemail/relayer-utils", branch = "ma
 sdk-utils = { git = "https://github.com/zkemail/sdk-images", branch = "main" }
 serde = "1.0.214"
 thiserror = "1.0.67"
+reqwest = "0.12.15"

@@ -21,7 +21,7 @@ async fn main() -> Result<()> {
     dotenv().ok();
 
     let port = std::env::var("PORT").unwrap_or_else(|_| "3000".to_string());
-    let api_key = Arc::new(std::env::var("API_KEY").expect("API_KEY must be set"));
+    let api_verification_url = Arc::new(std::env::var("API_VERIFICATION_URL").expect("API_VERIFICATION_URL must be set"));
 
     std::fs::create_dir_all("artifacts")?;
 
@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
         .allow_methods([Method::GET, Method::POST])
         .allow_headers([AUTHORIZATION, ACCEPT, CONTENT_TYPE]);
 
-    let prover = create_router(api_key.clone()).layer(cors);
+    let prover = create_router(api_verification_url).layer(cors);
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await?;
 

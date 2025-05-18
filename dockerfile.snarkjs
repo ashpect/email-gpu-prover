@@ -1,0 +1,69 @@
+# Start with NVIDIA CUDA base image
+# FROM nvidia/cuda:12.2.0-devel-ubuntu22.04
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get upgrade -y 
+# Update the package list and install necessary dependencies
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
+    cmake \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    libgmp-dev \
+    libffi-dev \
+    libsodium-dev \
+    nasm \
+    git \
+    awscli \
+    gcc \
+    # nodejs \
+    # npm \
+    curl \
+    m4 \
+    python3 \
+    python3-pip \
+    python3-dev \
+    wget \
+    software-properties-common \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Python 3 as the default python version
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
+    && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+
+# Install Node.js 18 (LTS) and npm, then install snarkjs
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g snarkjs
+
+WORKDIR /root
+
+# RUN git clone https://github.com/Orbiter-Finance/rapidsnark.git rapidsnark
+# WORKDIR /root/rapidsnark
+# RUN git submodule init
+# RUN git submodule update
+# RUN ./build_gmp.sh host
+# RUN mkdir build_prover
+# WORKDIR /root/rapidsnark/build_prover
+# RUN cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../package -DNVML_LIBRARY=/usr/local/cuda-12.2/targets/x86_64-linux/lib/stubs/libnvidia-ml.so
+# RUN make -j$(nproc) && make install
+# RUN chmod +x ../package/bin/prover_cuda
+
+# Create a symlink to the circom prover in /usr/local/bin
+# RUN ln -s /root/rapidsnark/package/bin/prover_cuda /usr/local/bin/prover
+
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH "/root/.cargo/bin:${PATH}"
+
+WORKDIR /prover
+
+# Copy Rust source code and build the project
+COPY Cargo.* ./
+COPY src ./src
+RUN cargo build
+
+# Set the default command to open a bash shell
+CMD ["cargo", "run"]

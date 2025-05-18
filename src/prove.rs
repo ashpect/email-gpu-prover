@@ -33,17 +33,29 @@ pub async fn prove(blueprint_path: &str, proof_id: &str) -> Result<()> {
 
     // Generate the proof
     info!(LOG, "Generating proof");
+    // run_command(
+    //     "prover",
+    //     &[
+    //         "circuit.zkey",
+    //         &format!("witness_{}.wtns", proof_id),
+    //         &format!("proof_{}.json", proof_id),
+    //         &format!("public_{}.json", proof_id),
+    //     ],
+    //     Some(blueprint_path), // Assuming this sets the working directory
+    // ).await?;
+
     run_command(
-        "prover",
+        "snarkjs",
         &[
+            "groth16",
+            "prove",
             "circuit.zkey",
             &format!("witness_{}.wtns", proof_id),
             &format!("proof_{}.json", proof_id),
             &format!("public_{}.json", proof_id),
         ],
-        Some(blueprint_path),
-    )
-    .await?;
+        Some(blueprint_path), // Assuming this sets the working directory
+    ).await?;
 
     Ok(())
 }
