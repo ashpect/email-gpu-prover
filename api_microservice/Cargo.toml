@@ -1,0 +1,17 @@
+[package]
+name = "api-microservice"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.92"
+axum = "0.7.7"
+dotenv = "0.15.0"
+serde_json = "1.0.132"
+tokio = { version = "1.41.0", features = ["full"] }
+tower-http = { version = "0.6.1", features = ["cors"] }
+slog = { version = "2.7.0", features = ["max_level_trace", "release_max_level_warn"] }
+relayer-utils = { git = "https://github.com/zkemail/relayer-utils", branch = "main" }
+sdk-utils = { git = "https://github.com/zkemail/sdk-images", branch = "main" }
+serde = "1.0.214"
+thiserror = "1.0.67"
