@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: k8s-prover-secret
+  namespace: sdk
+type: Opaque
+data:
+  #API_KEY: "YjlhMWY3YzItYTRkZS00ZjI3LTllODgtN2QxODMxM2ZhMWY0"
+  # API_KEY: b9a1f7c2-a4de-4f27-9e88-7d18313fa1f4
+  API_VERIFICATION_URL: "aHR0cDovL2FwaS1taWNyb3NlcnZpY2U6MzAwMi9hcGkvdmVyaWZ5"
+  # API_VERIFICATION_URL: http://api-microservice:3002/api/verify
+  PORT: "MzAwMA=="
+  # PORT: 3000
+  
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prover-pvc
+  namespace: sdk
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
